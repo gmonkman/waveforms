@@ -1,7 +1,7 @@
 from pydwf import DwfLibrary
 
 
-class PinController:
+class Pin:
     """Wrapper for an individual Digital IO pin."""
 
     def __init__(self, dio, pin_index: int):
@@ -29,29 +29,41 @@ class PinController:
             self._dio.outputSet(current_output & ~self._mask)
 
 
-class DIOWrapper:
-    """Wrapper for pydwf DigitalIO to enable intuitive pin manipulation."""
+# If exposing other pin functionality, do a different class, this is specifically for DIO
+class DIO:
+    """Wrapper for pydwf DigitalIO to enable intuitive pin manipulation.
+    Specifically for controlling digital IO only.
+    Across all pins DIO behaves the same, however there are multiple other
+    functions (which differ between pins"""
 
     def __init__(self, dio):
         self._dio = dio
+        self.Pin0 = Pin(self._dio, 0)
+        self.Pin1 = Pin(self._dio, 1)
+        self.Pin2 = Pin(self._dio, 2)
+        self.Pin3 = Pin(self._dio, 3)
+        self.Pin4 = Pin(self._dio, 4)
+        self.Pin5 = Pin(self._dio, 5)
+        self.Pin6 = Pin(self._dio, 6)
+        self.Pin7 = Pin(self._dio, 7)
+        self.Pin8 = Pin(self._dio, 8)
+        self.Pin9 = Pin(self._dio, 9)
+        self.Pin10 = Pin(self._dio, 10)
+        self.Pin11 = Pin(self._dio, 11)
+        self.Pin12 = Pin(self._dio, 12)
+        self.Pin13 = Pin(self._dio, 13)
+        self.Pin14 = Pin(self._dio, 14)
+        self.Pin15 = Pin(self._dio, 15)
 
-    def pin(self, index: int) -> PinController:
-        """Access a specific DIO pin controller."""
-        return PinController(self._dio, index)
+
 
 
 # --- Example Usage ---
+if __name__ == "__main__":
+    dwf = DwfLibrary()
 
-dwf = DwfLibrary()
+    with dwf.deviceControl.open(-1) as device:
+        dio_main = DIO(device.digitalIO)
 
-with dwf.deviceControl.open(-1) as device:
-    dio = DIOWrapper(device.digitalIO)
-
-    # Turn on pin 1
-    dio.pin(1).on = True
-
-    # Check state
-    print(f"Pin 1 state: {dio.pin(1).on}")  # Output: True
-
-    # Turn off pin 1
-    dio.pin(1).on = False
+        # Turn on pin 1
+        dio_main.Pin0.on = True
