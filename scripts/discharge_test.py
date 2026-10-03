@@ -3,7 +3,8 @@ import sys
 import time
 import matplotlib.pyplot as plt
 
-
+#NB AD2 Oscilloscope 1+ attach across battery terminals
+# Oscilloscope 2+, attached between load and mosfet drain and battery -ve
 
 
 # ==========================================
@@ -19,7 +20,11 @@ else:
 # ==========================================
 # CONFIGURATION PARAMETERS
 # ==========================================
-R_LOAD = 10.0  # Discharge load resistance in Ohms
+
+# Load Resistance. For accuracy measure the resistance
+# between battery +ve and the AD2 2+ +ve probe (post load)
+R_LOAD = 4.6
+
 V_CUTOFF = 10.5  # Cutoff threshold voltage (V1)
 PEUKERT_K = 1.20  # Peukert exponent for SLA/AGM battery
 RATED_C20_AH = 7.0  # Nominal battery C20 rating in Ah
@@ -135,25 +140,26 @@ if v1_init < V_CUTOFF:
     dwf.FDwfDeviceClose(hdwf)
     sys.exit(1)
 
-input("Press ENTER to start discharge test...")
-
-# Enable load (Drive MOSFET Gate HIGH)
-set_outputs(mosfet_on=True, buzzer_on=False)
-start_time = time.time()
-
-# Initial state for trapezoidal integration
-t_prev = start_time
-v1_prev, v2_prev = read_scope_voltages()
-i_prev = (v1_prev - v2_prev) / R_LOAD
-
-total_amp_seconds = 0.0
-
-print(
-    "\nTime (s) | V_bat (Ch1) | V_drain (Ch2) | V_load (V) | Current (A) | Capacity (Ah)"
-)
-print("-" * 80)
-
 try:
+
+    input("\n*** Press ENTER to start discharge test... ***")
+
+    # Enable load (Drive MOSFET Gate HIGH)
+    set_outputs(mosfet_on=True, buzzer_on=False)
+    start_time = time.time()
+
+    # Initial state for trapezoidal integration
+    t_prev = start_time
+    v1_prev, v2_prev = read_scope_voltages()
+    i_prev = (v1_prev - v2_prev) / R_LOAD
+
+    total_amp_seconds = 0.0
+
+    print(
+        "\nTime (s) | V_bat (Ch1) | V_drain (Ch2) | V_load (V) | Current (A) | Capacity (Ah)"
+    )
+    print("-" * 80)
+
     while True:
         time.sleep(SAMPLE_INTERVAL)
 
@@ -219,6 +225,12 @@ try:
 except KeyboardInterrupt:
     set_outputs(mosfet_on=False, buzzer_on=False)
     print("\nTest manually interrupted by user.")
+finally:
+    set_outputs(mosfet_on=False, buzzer_on=True)
+    
+
+input("\n\n*** Press ENTER to FINISH the discharge test and output results ...***")
+
 
 # Safe shutdown
 set_outputs(mosfet_on=False, buzzer_on=False)
