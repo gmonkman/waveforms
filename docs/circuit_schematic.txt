@@ -1,0 +1,25 @@
+					+12V Battery Positive  [AD2 Scope 1+ (x1 Probe)]
+                            +
+							|
+							|
+						[Load R]
+							|
+							+  [AD2 Scope 2+ (x1 Probe)]
+                            |
+                         Drain
+                 +------------------+
+                 |  N-Ch MOSFET     |
+ AD2 DIO 0       |  (IRLB8721)      |
+    |            |                  |
+ [100 Ω]--+------| Gate             |
+          |      |                  |
+      [10 kΩ]    |  Source          |
+          |      +--------+---------+
+          |               |
+          ---------------GND <======> Battery Negative [AD2 Scope 1+ Ground; AD2 Scope 2+ Ground]
+						  |
+						Buzzer
+						  |
+						AD2 DIO 1
+		  
+		 
