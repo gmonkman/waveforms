@@ -19,7 +19,7 @@ else:
 # ==========================================
 # CONFIGURATION PARAMETERS
 # ==========================================
-R_LOAD = 10.0  # Discharge load resistance in Ohms
+R_LOAD = 8.3  # Discharge load resistance in Ohms
 V_CUTOFF = 10.5  # Cutoff threshold voltage (V1)
 PEUKERT_K = 1.20  # Peukert exponent for SLA/AGM battery
 RATED_C20_AH = 7.0  # Nominal battery C20 rating in Ah
